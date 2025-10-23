@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FolderGit2, FileText, Globe, Github } from "lucide-react";
+import ESDocs from "../assets/ES_DOCS.pdf";
 
 export default function Projects() {
   const allProjects = [
@@ -10,8 +11,8 @@ export default function Projects() {
       desc: "A desktop-like scheduling app built with Java Swing. Demonstrates OOP, calendar UI, and save/load features.",
       tags: ["Java", "Swing"],
       buttons: [
-        { label: "View Docs", icon: <FileText size={16} />, link: "#docs" },
-        { label: "Source", icon: <Github size={16} />, link: "#source" },
+        { label: "View Docs", icon: <FileText size={16} />, link: ESDocs },
+        { label: "Source", icon: <Github size={16} />, link: "https://github.com/CookieBunnyy/EasySched-Scheduler-" },
       ],
     },
     {
@@ -19,8 +20,8 @@ export default function Projects() {
       desc: "A website where you can explore random nightmare cards, uncover their dark lore, and shuffle the deck to reveal the nightmare destined for you.",
       tags: ["HTML", "JavaScript", "CSS"],
       buttons: [
-        { label: "View Site", icon: <Globe size={16} />, link: "#site" },
-        { label: "Source", icon: <Github size={16} />, link: "#source" },
+        { label: "View Site", icon: <Globe size={16} />, link: "https://cookiebunnyy.github.io/Nightmare-Web/Main.html" },
+        { label: "Source", icon: <Github size={16} />, link: "https://github.com/CookieBunnyy/Nightmare-Web" },
       ],
     },
   ];

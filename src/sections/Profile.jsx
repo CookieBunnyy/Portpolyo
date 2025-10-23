@@ -1,4 +1,6 @@
 import { Eye, Star, FolderGit2, Download, Mail } from "lucide-react";
+import CVResume from "../assets/CV_Resume.pdf";
+
 
 export default function Profile() {
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
@@ -128,7 +130,7 @@ export default function Profile() {
         {/* Download CV Button - fixed bottom-right */}
         <div className="absolute bottom-1 right-2">
           <a
-            href="/assets/Resume_Siroy.pdf"
+            href={CVResume}
             download
             className="flex items-center gap-2 bg-green-600 dark:bg-green-700 
                        hover:bg-green-700 dark:hover:bg-green-600 
