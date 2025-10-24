@@ -1,10 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Facebook, Send } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const [showForm, setShowForm] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState("");
+  const formRef = useRef();
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -15,21 +19,40 @@ export default function Contact() {
     },
   };
 
-  // Smooth fade-in-up for socials
   const socialContainer = {
     hidden: {},
-    visible: {
-      transition: { staggerChildren: 0.15 },
-    },
+    visible: { transition: { staggerChildren: 0.15 } },
   };
 
   const socialItem = {
     hidden: { opacity: 0, y: 0 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
+  // handle EmailJS submission
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setSending(true);
+    setStatus("");
+
+    emailjs
+      .sendForm(
+        "service_tctw1yo",      
+        "template_p2inql9",     
+        formRef.current,
+        "9TsDbSwb7tMrBW_Sm"       
+      )
+      .then(
+        () => {
+          setStatus("✅ Message sent successfully!");
+          formRef.current.reset();
+        },
+        (error) => {
+          console.error(error);
+          setStatus("❌ Failed to send message. Please try again.");
+        }
+      )
+      .finally(() => setSending(false));
   };
 
   return (
@@ -38,8 +61,9 @@ export default function Contact() {
       initial="hidden"
       animate="visible"
       className="text-left p-5 rounded-2xl bg-stone-200 dark:bg-neutral-800 
-                 text-neutral-800 dark:text-neutral-100 h-full backdrop-blur-md 
-                 shadow-lg border border-stone-400/30 dark:border-neutral-700"
+            text-neutral-800 dark:text-neutral-100 h-full backdrop-blur-md 
+            shadow-lg border border-stone-400/30 dark:border-neutral-700
+            overflow-y-auto"
     >
       {/* Header */}
       <motion.h2
@@ -89,6 +113,8 @@ export default function Contact() {
         <AnimatePresence>
           {showForm && (
             <motion.form
+              ref={formRef}
+              onSubmit={sendEmail}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -96,13 +122,13 @@ export default function Contact() {
               className="overflow-hidden bg-neutral-100 dark:bg-neutral-900/60 border 
                          border-stone-300/40 dark:border-neutral-700 rounded-lg p-3 
                          flex flex-col gap-2"
-              onSubmit={(e) => e.preventDefault()}
             >
               <label className="block text-sm mb-1 text-neutral-700 dark:text-neutral-300">
                 Name
               </label>
               <input
                 type="text"
+                name="user_name"
                 placeholder="Enter your name"
                 required
                 className="w-full px-3 py-2 rounded-md bg-neutral-200 dark:bg-neutral-800 
@@ -115,6 +141,7 @@ export default function Contact() {
               </label>
               <input
                 type="email"
+                name="user_email"
                 placeholder="Enter your email"
                 required
                 className="w-full px-3 py-2 rounded-md bg-neutral-200 dark:bg-neutral-800 
@@ -126,6 +153,7 @@ export default function Contact() {
                 Message
               </label>
               <textarea
+                name="message"
                 placeholder="Type your message..."
                 required
                 rows={4}
@@ -139,17 +167,26 @@ export default function Contact() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
+                disabled={sending}
                 className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 
-                           text-white px-4 py-2 rounded-md shadow-md transition-all"
+                           text-white px-4 py-2 rounded-md shadow-md transition-all 
+                           disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <Send size={18} />
-                Send
+                {sending ? "Sending..." : "Send"}
               </motion.button>
+
+              {/* Status Message */}
+              {status && (
+                <p className="text-sm mt-2 text-center text-neutral-700 dark:text-neutral-300">
+                  {status}
+                </p>
+              )}
             </motion.form>
           )}
         </AnimatePresence>
 
-        {/* Social Links (Smooth fade-in-up) */}
+        {/* Social Links */}
         <motion.div
           variants={socialContainer}
           initial="hidden"

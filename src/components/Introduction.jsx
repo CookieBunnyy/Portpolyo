@@ -1,57 +1,47 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Moon, Sun } from "lucide-react";
 import ImageSwitcher from "./ImageSwitcher.jsx";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Introduction({ onProceed }) {
-  const [darkMode, setDarkMode] = useState(true);
-
-  useEffect(() => {
-    if (darkMode) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-  }, [darkMode]);
-
-  const tags = ["Video Editor", "Photographer", "Gamer",  "Student"];
+  const tags = ["Video Editor", "Photographer", "Gamer", "Student"];
 
   return (
     <motion.div
       onClick={onProceed}
       className={`h-screen flex flex-col lg:flex-row items-center justify-center 
         px-8 lg:px-16 gap-8 lg:gap-14
-        ${darkMode ? "bg-neutral-900 text-white" : "bg-stone-100 text-neutral-900"}
+        bg-stone-100 dark:bg-neutral-900 text-neutral-900 dark:text-white
         cursor-pointer select-none relative overflow-hidden`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: -100 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
-      {/* Theme Toggle */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setDarkMode(!darkMode);
-        }}
-        className="absolute top-6 right-6 p-3 rounded-full bg-neutral-200 dark:bg-neutral-800 
-                   border border-neutral-300 dark:border-neutral-700 
-                   shadow-md hover:scale-110 transition-transform"
+      {/* Global Theme Toggle (doesn't trigger onProceed) */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute top-6 right-6 z-50"
       >
-        {darkMode ? (
-          <motion.div whileTap={{ rotate: 45, scale: 0.85 }}>
-            <Sun size={22} />
-          </motion.div>
-        ) : (
-          <motion.div whileTap={{ rotate: -45, scale: 0.85 }}>
-            <Moon size={22} />
-          </motion.div>
-        )}
-      </button>
+        <ThemeToggle />
+      </div>
 
       {/* Center Container */}
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 w-full">
+        {/* Image Section (moves on top in mobile, shrinks slightly) */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="flex justify-center items-center order-1 lg:order-2 w-full
+                     max-w-[220px] sm:max-w-[260px] md:max-w-[300px] lg:max-w-[380px]"
+        >
+          <ImageSwitcher />
+        </motion.div>
+
         {/* Text Section */}
         <motion.div
-          className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left max-w-[550px]"
+          className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left max-w-[550px] order-2 lg:order-1"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
@@ -107,16 +97,6 @@ export default function Introduction({ onProceed }) {
               </motion.span>
             ))}
           </motion.div>
-        </motion.div>
-
-        {/* Image Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="flex justify-center items-center"
-        >
-          <ImageSwitcher />
         </motion.div>
       </div>
 

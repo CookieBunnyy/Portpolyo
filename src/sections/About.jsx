@@ -21,7 +21,7 @@ export default function About() {
 
   return (
     <div className="p-10 sm:p-8 lg:p-10 rounded-2xl bg-stone-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 h-full flex flex-col backdrop-blur-md shadow-lg border border-stone-400/30 dark:border-neutral-700 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4">About</h2>
+      <h2 className="text-2xl font-bold mb-3">About</h2>
 
       {/* 🧍 About Paragraph */}
       <motion.p
@@ -29,7 +29,7 @@ export default function About() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9 }}
         viewport={{ once: true }}
-        className="mb-6 leading-relaxed text-justify text-zinc-800 dark:text-zinc-200"
+        className="mb-5 leading-relaxed text-justify text-zinc-800 dark:text-zinc-200"
       >
         I'm{" "}
         <span className="font-semibold text-green-600 dark:text-green-400 transition-colors duration-600">

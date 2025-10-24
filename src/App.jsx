@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, Home, User, FolderGit2, Mail, Github, Facebook } from "lucide-react";
+import { Home, User, FolderGit2, Mail } from "lucide-react";
 import { Card, CardHeader } from "@components/ui/card";
 import "./index.css";
 
+import ThemeToggle from "@/components/ThemeToggle";
 import Profile from "@/sections/Profile";
 import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Contact from "@/sections/Contact";
 
-// 🌀 Rotating Text Component
+// Rotating Text Component
 function RotatingPhrases() {
   const phrases = [
     "Let's create something amazing together.",
@@ -20,7 +21,7 @@ function RotatingPhrases() {
 
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
+  useState(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % phrases.length);
     }, 3000);
@@ -46,7 +47,6 @@ function RotatingPhrases() {
 
 export default function App() {
   const [expanded, setExpanded] = useState(null);
-  const [theme, setTheme] = useState("dark");
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",
@@ -55,15 +55,7 @@ export default function App() {
     contact: "max-w-4xl min-h-[96vh]",
   };
 
-  // 🌙 Theme toggle effect
-  useEffect(() => {
-    if (theme === "dark") document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
-
-  // ✨ Animation Variants
+  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -78,21 +70,23 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-stone-300 via-stone-300/80 to-stone-400/60 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-900 text-neutral-900 dark:text-white flex flex-col items-center p-6 relative overflow-hidden transition-colors duration-500">
-      {/* 🔰 Title */}
-      <div className="absolute top-6 left-6 text-3xl font-bold text-neutral-800 dark:text-neutral-100">
+    <div
+      className="min-h-screen bg-linear-to-br from-stone-300 via-stone-300/80 to-stone-400/60 
+                 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-900 
+                 text-neutral-900 dark:text-white flex flex-col items-center p-6 relative 
+                 transition-colors duration-500 overflow-y-auto"
+    >
+      {/* Title */}
+      <div className="absolute top-6 left-6 text-3xl font-bold text-green-500 dark:text-green-400">
         <h1>Portpolyo.</h1>
       </div>
 
-      {/* 🌗 Theme Toggle */}
-      <button
-        onClick={toggleTheme}
-        className="absolute top-6 right-6 bg-white/40 dark:bg-neutral-800/60 backdrop-blur-md p-3 rounded-full border border-neutral-300 dark:border-neutral-700 hover:scale-110 transition-transform shadow-md z-50"
-      >
-        {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
+      {/* Global Theme Toggle */}
+      <div className="absolute top-6 right-6 z-50">
+        <ThemeToggle />
+      </div>
 
-      {/* 🧭 Navbar */}
+      {/* Navbar */}
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -126,7 +120,7 @@ export default function App() {
         ))}
       </motion.nav>
 
-      {/* 🏠 Main Content */}
+      {/* Main Content */}
       <div className="pt-24 w-full flex justify-center items-center">
         <AnimatePresence mode="wait">
           {!expanded && (
@@ -146,7 +140,7 @@ export default function App() {
     onClick={() => setExpanded("profile")}
     className="h-full rounded-3xl p-6 bg-stone-200 dark:bg-neutral-800 text-neutral-100 cursor-pointer hover:scale-[1.02] transition-transform flex flex-col items-start justify-start shadow-xl border border-stone-400/30 dark:border-neutral-700"
   >
-    {/* 🧑 Profile Picture */}
+    {/* Profile Picture */}
     <motion.img
       src="/images/pic.jpg"
       alt="profile pic"
@@ -156,7 +150,7 @@ export default function App() {
       className="w-32 h-32 rounded-full object-cover border-3 border-green-00 dark:border-green-500 shadow-lg mb-1 self-center"
     />
 
-    {/* 👋 Intro */}
+    {/*Intro*/}
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -175,7 +169,7 @@ export default function App() {
 
 
       
-      {/* 🏷️ Tags */}
+      {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-3">
         {["Photographer", "Gamer", "Video Editor", "Programmer"].map(
           (tag, index) => (
@@ -193,7 +187,7 @@ export default function App() {
       </div>
     </motion.div>
 
-    {/* 📋 Details */}
+    {/* Details */}
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -214,7 +208,7 @@ export default function App() {
       </p>
     </motion.div>
 
-    {/* 📈 Stats */}
+    {/* Stats */}
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -238,7 +232,7 @@ export default function App() {
         ></motion.div>
       </div>
 
-      {/* 👁️ Profile Views and ⭐ Ratings */}
+      {/* Profile Views and Ratings */}
       <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm">
         <div className="flex items-center gap-1">
           <svg
@@ -273,7 +267,7 @@ export default function App() {
 </motion.div>
 
 
-              {/* 📖 About Card */}
+              {/* About Card */}
 <motion.div variants={cardVariants} className="lg:col-span-2 lg:row-span-1">
   <Card
     onClick={() => setExpanded("about")}
@@ -282,7 +276,7 @@ export default function App() {
       About
     </CardHeader>
 
-    {/* 📝 Bio Preview */}
+    {/* Bio Preview */}
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -334,7 +328,7 @@ export default function App() {
 </motion.div>
 
 
-             {/* 💻 Projects Card */}
+             {/* Projects Card */}
 <motion.div variants={cardVariants} className="lg:col-span-1 lg:row-span-1">
   <Card
     onClick={() => setExpanded("projects")}
@@ -371,14 +365,14 @@ export default function App() {
 </motion.div>
 
 
-        {/* ✉️ Contact Card */}
-              <motion.div variants={cardVariants} className="lg:col-span-1 lg:row-span-1 lg:col-start-3">
+        {/* Contact Card */}
+              <motion.div variants={cardVariants} className="lg:col-span-1  lg:row-span-1 lg:col-start-3">
                 <Card
                   onClick={() => setExpanded("contact")}
                   className="relative h-full rounded-3xl p-5 bg-stone-200 dark:bg-neutral-800 
                              text-neutral-800 dark:text-neutral-100 cursor-pointer hover:scale-[1.02] 
                              transition-transform border-stone-400/30 dark:border-neutral-700 
-                             overflow-hidden flex flex-col justify-between group"
+                             overflow-hidden flex flex-col justify-between group "
                 >
                   <CardHeader className="text-l font-semibold text-left">Contact Me</CardHeader>
 
@@ -404,7 +398,7 @@ export default function App() {
                     Let's Connect
                   </motion.div>
 
-                  {/* 🔁 Rotating Phrases */}
+                  {/* Rotating Phrases */}
                   <RotatingPhrases />
 
                   {/* Faint Overlay */}
@@ -416,7 +410,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* 🪄 Expanded Section */}
+        {/* Expanded Section */}
         <AnimatePresence>
           {expanded && (
             <motion.div
@@ -425,14 +419,16 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.5 }}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center overflow-auto pt-24"
+              className="absolute inset-0 z-30 flex flex-col items-center justify-center overflow-auto pt-19"
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className={`w-full p-15 ${expandedSizes[expanded] || "max-w-7xl min-h-[80vh]"}`}
+                className={`w-full p-15 ${
+                  expandedSizes[expanded] || "max-w-7xl min-h-[70vh]"
+                }`}
               >
                 {expanded === "profile" && <Profile />}
                 {expanded === "about" && <About />}

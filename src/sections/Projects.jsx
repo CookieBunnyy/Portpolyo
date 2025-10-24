@@ -39,7 +39,9 @@ export default function Projects() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="text-left p-6 rounded-2xl bg-stone-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 h-full backdrop-blur-md shadow-lg flex flex-col border border-stone-400/30 dark:border-neutral-700"
+      className="text-left p-4 sm:p-6 rounded-2xl bg-stone-200 dark:bg-neutral-800 
+           text-neutral-800 dark:text-neutral-100 h-full backdrop-blur-md shadow-lg 
+           flex flex-col border border-stone-400/30 dark:border-neutral-700 overflow-y-auto"
     >
       <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
         <FolderGit2 className="text-green-500" /> Projects

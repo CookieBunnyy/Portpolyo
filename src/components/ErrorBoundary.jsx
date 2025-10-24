@@ -11,7 +11,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    // you could log to a monitoring service here
+    
     console.error('ErrorBoundary caught an error', error, info)
   }
 
