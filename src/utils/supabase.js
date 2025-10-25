@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
+// Use environment variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -10,21 +11,21 @@ export async function getLikes() {
   const { data, error } = await supabase
     .from("profile_likes")
     .select("likes")
-    .limit(1)
+    .eq("id", 1)       // assume row with id=1 exists
     .single();
-    
+
   if (error) {
     console.error("Error fetching likes:", error);
     return 0;
   }
-  return data?.likes || 0;
+  return data.likes || 0;
 }
 
 // Increment likes
 export async function incrementLikes() {
   const { data, error } = await supabase
     .from("profile_likes")
-    .update({ likes: supabase.rpc("increment_likes") }) // alternative: we will use increment()
+    .update({ likes: supabase.raw("likes + 1") })
     .eq("id", 1)
     .select()
     .single();
@@ -33,5 +34,5 @@ export async function incrementLikes() {
     console.error("Error incrementing likes:", error);
     return 0;
   }
-  return data?.likes || 0;
+  return data.likes;
 }
