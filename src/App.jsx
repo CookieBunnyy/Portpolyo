@@ -8,7 +8,6 @@ import Profile from "@/sections/Profile";
 import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Contact from "@/sections/Contact";
-import { getPageViews } from "./utils/umami";
 import useProfileViews from "./hooks/useProfileViews";
 
 // Rotating Text Component
@@ -23,6 +22,8 @@ function RotatingPhrases() {
 
   const [index, setIndex] = useState(0);
   
+  const profileViews = useProfileViews();
+  console.log(profileViews);
   
 
 
@@ -54,25 +55,29 @@ export default function App() {
   const [expanded, setExpanded] = useState(null);
   const [profileViews, setProfileViews] = useState(0);
   
+  
 
  useEffect(() => {
-  if (import.meta.env.PROD) {
-    const fetchProfileViews = async () => {
-      try {
-        const res = await fetch(`/api/getPageViews?path=/profile`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        setProfileViews(data.views || 0);
-      } catch (err) {
-        console.error("Error fetching profile views:", err);
-        setProfileViews(0);
-      }
-    };
-    fetchProfileViews();
-  } else {
-    setProfileViews(0); // fallback for local dev
-  }
-}, []);
+    // Only fetch in production
+    if (import.meta.env.MODE === "production") {
+      const fetchProfileViews = async () => {
+        try {
+          const res = await fetch(`/api/getPageViews?path=/profile`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          setProfileViews(data.views || 0);
+        } catch (err) {
+          console.error("Error fetching profile views:", err);
+          setProfileViews(0); // fallback
+        }
+      };
+
+      fetchProfileViews();
+    } else {
+      // Local dev: optional mock value
+      setProfileViews(0);
+    }
+  }, []);
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",

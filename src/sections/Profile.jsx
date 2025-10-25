@@ -9,29 +9,31 @@ import { useTrackView } from "../hooks/useTrackView";
 
 export default function Profile() {
   useTrackView("profile");
-  const [views, setViews] = useState(0);
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
    useEffect(() => {
-  if (import.meta.env.PROD) {
-    const fetchViews = async () => {
-      try {
-        const res = await fetch(`/api/getPageViews?path=/profile`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        setViews(data.views || 0);
-      } catch (err) {
-        console.error("Error fetching profile views:", err);
-        setViews(0); // fallback
-      }
-    };
-    fetchViews();
-  } else {
-    setViews(0); // fallback for local development
-  }
-}, []);
+    // Only fetch in production
+    if (import.meta.env.MODE === "production") {
+      const fetchProfileViews = async () => {
+        try {
+          const res = await fetch(`/api/getPageViews?path=/profile`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          setProfileViews(data.views || 0);
+        } catch (err) {
+          console.error("Error fetching profile views:", err);
+          setProfileViews(0); // fallback
+        }
+      };
+
+      fetchProfileViews();
+    } else {
+      // Local dev: optional mock value
+      setProfileViews(0);
+    }
+  }, []);
 
   const handleImageClick = () => {
     if (isAnimating) return;
@@ -113,7 +115,7 @@ export default function Profile() {
            <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm mt-5">
         <div className="flex items-center gap-2">
           <Eye className="w-4 h-4 text-green-400" />
-          <span>{views}</span>
+          <span>{profileViews}</span>
         
         
           {/* Rating */}
