@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Home, User, FolderGit2, Mail } from "lucide-react";
 import { Card, CardHeader } from "@components/ui/card";
 import "./index.css";
-import useProfileViews from "./hooks/useProfileViews";
 import ThemeToggle from "@/components/ThemeToggle";
 import Profile from "@/sections/Profile";
 import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Contact from "@/sections/Contact";
+import { getPageViews } from "./utils/umami";
 
 // Rotating Text Component
 function RotatingPhrases() {
@@ -22,6 +22,8 @@ function RotatingPhrases() {
 
   const [index, setIndex] = useState(0);
   
+  
+
 
   useEffect(() => {
   const interval = setInterval(() => {
@@ -49,7 +51,15 @@ function RotatingPhrases() {
 
 export default function App() {
   const [expanded, setExpanded] = useState(null);
-  const profileViews = useProfileViews();
+  const [profileViews, setProfileViews] = useState(0);
+  
+  useEffect(() => {
+    const fetchProfileViews = async () => {
+      const count = await getPageViews("/profile");
+      setProfileViews(count);
+    };
+    fetchProfileViews();
+  }, []);
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",

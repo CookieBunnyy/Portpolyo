@@ -5,14 +5,22 @@ import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
 import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
-import useProfileViews from "../hooks/useProfileViews";
+import { getPageViews } from "../utils/umami";
 
 export default function Profile() {
   useTrackView("profile");
+  const [views, setViews] = useState(0);
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const views = useProfileViews();
+
+   useEffect(() => {
+    const fetchViews = async () => {
+      const count = await getPageViews("/profile");
+      setViews(count);
+    };
+    fetchViews();
+  }, []);
 
   const handleImageClick = () => {
     if (isAnimating) return;
@@ -91,11 +99,12 @@ export default function Profile() {
           </div>
 
           {/* Views */}
-          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">
-      <Eye className="text-green-600 dark:text-green-400" size={18} />
-      <strong className="text-neutral-800 dark:text-neutral-100">{views}</strong>
-    </div>
-
+           <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm mt-4">
+        <div className="flex items-center gap-1">
+          <Eye className="w-4 h-4 text-green-400" />
+          <span>{views}</span>
+        </div>
+        
           {/* Rating */}
           <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">
             <Star className="text-yellow-500 dark:text-yellow-400" size={18} />
@@ -103,7 +112,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
-
+      </div>
       {/* Right Section */}
       <div
         className="flex flex-col justify-between lg:justify-start gap-4 sm:gap-6 
@@ -168,7 +177,7 @@ export default function Profile() {
       onClick={() => window.umami?.track('Clicked Resume Download')}
       className="flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-lg"
 >
-  <Download size={18} /> View Resume
+  <Download size={18} /> Download CV
 </a>
         </div>
       </div>
