@@ -58,24 +58,21 @@ export default function App() {
   
 
  useEffect(() => {
-    // Only fetch in production
     if (import.meta.env.MODE === "production") {
       const fetchProfileViews = async () => {
         try {
           const res = await fetch(`/api/getPageViews?path=/profile`);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const data = await res.json();
-          setProfileViews(data.views || 0);
+          setProfileViews(data.views);
         } catch (err) {
           console.error("Error fetching profile views:", err);
-          setProfileViews(0); // fallback
+          setProfileViews(0);
         }
       };
-
       fetchProfileViews();
     } else {
-      // Local dev: optional mock value
-      setProfileViews(0);
+      setProfileViews(0); // dev fallback
     }
   }, []);
 
