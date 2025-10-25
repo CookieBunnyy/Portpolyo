@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, Star, FolderGit2, Download, Mail } from "lucide-react";
+import {FolderGit2, Mail, Download, Heart } from "lucide-react";
 import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
 import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
+import { getLikes, incrementLikes } from "../utils/supabase";
 
 
 export default function Profile() {
@@ -12,29 +13,11 @@ export default function Profile() {
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [profileViews, setProfileViews] = useState(0);
+  const [likes, setLikes] = useState(0);
+  const [isLiking, setIsLiking] = useState(false); // prevent multiple rapid clicks
 
-   useEffect(() => {
-    // Only fetch in production
-    if (import.meta.env.MODE === "production") {
-      const fetchProfileViews = async () => {
-        try {
-          const res = await fetch(`/api/getPageViews?path=/profile`);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          setProfileViews(data.views || 0);
-        } catch (err) {
-          console.error("Error fetching profile views:", err);
-          setProfileViews(0); // fallback
-        }
-      };
 
-      fetchProfileViews();
-    } else {
-      // Local dev: optional mock value
-      setProfileViews(0);
-    }
-  }, []);
+   
 
   const handleImageClick = () => {
     if (isAnimating) return;
@@ -45,6 +28,23 @@ export default function Profile() {
 
     // Reset lock after animation
     setTimeout(() => setIsAnimating(false), 300);
+  };
+
+  useEffect(() => {
+    async function fetchLikes() {
+      const currentLikes = await getLikes();
+      setLikes(currentLikes);
+    }
+    fetchLikes();
+  }, []);
+
+  // Handle like button click
+  const handleLike = async () => {
+    if (isLiking) return;
+    setIsLiking(true);
+    const newLikes = await incrementLikes();
+    setLikes(newLikes); // update the shared state in App.jsx
+    setTimeout(() => setIsLiking(false), 500);
   };
 
   return (
@@ -98,35 +98,16 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className="mt-5 sm:mt-6 flex flex-wrap justify-center lg:justify-start items-center gap-4 sm:gap-6">
-          {/* Performance */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-13 h-13 sm:w-16 sm:h-16 rounded-full bg-stone-300 dark:bg-neutral-700 
-                            flex items-center justify-center text-lg sm:text-2xl font-bold 
-                            text-neutral-800 dark:text-neutral-100">
-              40
-            </div>
-            <div className="text-xs sm:text-sm">
-              <div className="text-neutral-700 dark:text-neutral-300">Performance</div>
-              <div className="text-neutral-500 dark:text-neutral-400">Score</div>
-            </div>
-          </div>
-
-          {/* Views */}
-           <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm mt-5">
-        <div className="flex items-center gap-2">
-          <Eye className="w-4 h-4 text-green-400" />
-          <span>{profileViews}</span>
-        
-        
-          {/* Rating */}
-          <div className="flex items-center gap-1 sm:gap-1 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">
-            <Star className="text-yellow-500 dark:text-yellow-400" size={18} />
-            <strong className="text-neutral-800 dark:text-neutral-100">4.8</strong>
-          </div>
-        </div>
-        </div>
-      </div>
+        {/* Likes Section */}
+         <motion.div
+              className="flex items-center gap-2 cursor-pointer text-green-600 dark:text-green-400 text-sm select-none"
+              onClick={handleLike}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Heart size={18} fill={likes > 0 ? "green" : "none"} strokeWidth={2} />
+              <span>{likes}</span>
+            </motion.div>
+       
       </div>
       {/* Right Section */}
       <div

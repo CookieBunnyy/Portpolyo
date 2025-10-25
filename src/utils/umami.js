@@ -9,16 +9,5 @@ export const trackEvent = (eventName, data = {}) => {
   }
 };
 
-// Fetch page views securely via your Netlify serverless function
-export async function getPageViews(_, path = "/profile") {
-  try {
-    const response = await fetch(
-      `/.netlify/functions/getPageViews?path=${path}`
-    );
-    const data = await response.json();
-    return data.views || 0;
-  } catch (error) {
-    console.error("Error fetching page views:", error);
-    return 0;
-  }
-}
+
+

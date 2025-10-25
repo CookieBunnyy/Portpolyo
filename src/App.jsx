@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, User, FolderGit2, Mail } from "lucide-react";
+import { Home, User, FolderGit2, Heart, Mail } from "lucide-react";
 import { Card, CardHeader } from "@components/ui/card";
 import "./index.css";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -8,7 +8,8 @@ import Profile from "@/sections/Profile";
 import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Contact from "@/sections/Contact";
-import useProfileViews from "./hooks/useProfileViews";
+import { getLikes } from "@/utils/supabase";
+
 
 // Rotating Text Component
 function RotatingPhrases() {
@@ -22,9 +23,7 @@ function RotatingPhrases() {
 
   const [index, setIndex] = useState(0);
   
-  const profileViews = useProfileViews();
-  console.log(profileViews);
-  
+
 
 
   useEffect(() => {
@@ -53,28 +52,23 @@ function RotatingPhrases() {
 
 export default function App() {
   const [expanded, setExpanded] = useState(null);
-  const [profileViews, setProfileViews] = useState(0);
+  const [likes, setLikes] = useState(0);
   
   
-
- useEffect(() => {
-    if (import.meta.env.MODE === "production") {
-      const fetchProfileViews = async () => {
-        try {
-          const res = await fetch(`/api/getPageViews?path=/profile`);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          setProfileViews(data.views);
-        } catch (err) {
-          console.error("Error fetching profile views:", err);
-          setProfileViews(0);
-        }
-      };
-      fetchProfileViews();
-    } else {
-      setProfileViews(0); // dev fallback
+  // Fetch likes on mount
+  useEffect(() => {
+    async function fetchLikes() {
+      const currentLikes = await getLikes();
+      setLikes(currentLikes);
     }
+    fetchLikes();
   }, []);
+
+  const handleLike = async () => {
+    const newLikes = await incrementLikes();
+    setLikes(newLikes);
+  };
+ 
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",
@@ -159,7 +153,7 @@ export default function App() {
   variants={cardVariants}
   className="lg:col-span-1 lg:row-span-2"
 >
-  <Card
+  <Card likes={likes} setLikes={setLikes}
     onClick={() => setExpanded("profile")}
     className="h-full rounded-3xl p-6 bg-stone-200 dark:bg-neutral-800 text-neutral-100 cursor-pointer hover:scale-[1.02] transition-transform flex flex-col items-start justify-start shadow-xl border border-stone-400/30 dark:border-neutral-700"
   >
@@ -230,62 +224,10 @@ export default function App() {
         July 25, 2003
       </p>
     </motion.div>
-
-    {/* Stats */}
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 0.6 }}
-      className="w-full mt-auto border-t border-neutral-700 pt-4"
-    >
-      <div className="flex justify-between items-center text-sm mb-2">
-        <span className="font-semibold text-neutral-800 dark:text-white">
-          Performance
-        </span>
-        <span className="text-green-400 font-medium">40%</span>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="w-full h-2 bg-neutral-700 rounded-full overflow-hidden mb-3">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "40%" }}
-          transition={{ delay: 0.7, duration: 1 }}
-          className="h-full bg-green-500 rounded-full"
-        ></motion.div>
-      </div>
-
-      {/* Profile Views and Ratings */}
-       <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm">
-      <div className="flex items-center gap-1">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-4 h-4 text-green-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-          />
-        </svg>
-        <span>{profileViews} visits</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <span className="text-yellow-400 text-base">★</span>
-        <span>4.8</span>
-      </div>
-    </div>
-    </motion.div>
+    
+    <div className="flex items-center gap-2 text-green-600 dark:text-green-400 mb-4">
+        <Heart size={20} fill={likes > 0 ? "red" : "none"} strokeWidth={2} />
+        <span>{likes}</span> </div>
   </Card>
 </motion.div>
 
