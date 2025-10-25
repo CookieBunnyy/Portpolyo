@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Home, User, FolderGit2, Mail } from "lucide-react";
 import { Card, CardHeader } from "@components/ui/card";
@@ -18,16 +18,17 @@ function RotatingPhrases() {
     "Got an idea? I’d love to hear it.",
     "Reach out and let’s collaborate!",
   ];
-  const profileViews = useProfileViews();
+  
 
   const [index, setIndex] = useState(0);
+  
 
-  useState(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % phrases.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(() => {
+  const interval = setInterval(() => {
+    setIndex((prev) => (prev + 1) % phrases.length);
+  }, 3000);
+  return () => clearInterval(interval);
+}, []);
 
   return (
     <div className="mt-1 h-5 flex justify-center text-sm text-center text-neutral-700 dark:text-neutral-300">
@@ -48,6 +49,7 @@ function RotatingPhrases() {
 
 export default function App() {
   const [expanded, setExpanded] = useState(null);
+  const profileViews = useProfileViews();
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",
