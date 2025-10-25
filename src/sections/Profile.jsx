@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, Star, FolderGit2, Download, Mail } from "lucide-react";
 import CVResume from "../assets/CV_Resume.pdf";
