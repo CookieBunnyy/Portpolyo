@@ -13,7 +13,7 @@ export async function handler(event) {
       `https://analytics.umami.is/api/websites/${websiteId}/stats?url=${path}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${process.env.UMAMI_TOKEN}`,
           Accept: "application/json",
         },
       }

@@ -52,14 +52,25 @@ function RotatingPhrases() {
 export default function App() {
   const [expanded, setExpanded] = useState(null);
   const [profileViews, setProfileViews] = useState(0);
-  
+
   useEffect(() => {
+  // Only fetch if deployed (production)
+  if (import.meta.env.MODE === "production") {
     const fetchProfileViews = async () => {
-      const count = await getPageViews("/profile");
-      setProfileViews(count);
+      try {
+        const count = await getPageViews("/profile");
+        setProfileViews(count);
+      } catch (err) {
+        console.error("Error fetching profile views:", err);
+        setProfileViews(0); // fallback
+      }
     };
     fetchProfileViews();
-  }, []);
+  } else {
+    // Optional: mock value when developing locally
+    setProfileViews(0);
+  }
+}, []);
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",

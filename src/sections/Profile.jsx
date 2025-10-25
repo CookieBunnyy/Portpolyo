@@ -99,17 +99,18 @@ export default function Profile() {
           </div>
 
           {/* Views */}
-           <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm mt-4">
-        <div className="flex items-center gap-1">
+           <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm mt-5">
+        <div className="flex items-center gap-2">
           <Eye className="w-4 h-4 text-green-400" />
           <span>{views}</span>
-        </div>
+        
         
           {/* Rating */}
-          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">
+          <div className="flex items-center gap-1 sm:gap-1 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">
             <Star className="text-yellow-500 dark:text-yellow-400" size={18} />
             <strong className="text-neutral-800 dark:text-neutral-100">4.8</strong>
           </div>
+        </div>
         </div>
       </div>
       </div>

@@ -1,0 +1,16 @@
+# netlify.toml
+
+[build]
+  command = "npm run build"            # Vite production build
+  publish = "dist"                     # Vite outputs to dist by default
+  functions = "netlify/functions"      # Folder for serverless functions
+
+[dev]
+  command = "npm run dev"              # Vite dev server
+  port = 5173                           # Vite dev server port
+  functions = "netlify/functions"      # Functions folder for local dev
+
+[[redirects]]
+  from = "/api/*"                       # Optional: friendly API path
+  to = "/.netlify/functions/:splat"
+  status = 200
