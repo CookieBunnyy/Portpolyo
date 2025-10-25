@@ -1,38 +1,51 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Use environment variables
+// Environment variables from Vite
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Create Supabase client with proper headers
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  global: {
+    headers: {
+      Authorization: `Bearer ${supabaseKey}`,
+      apikey: supabaseKey,
+      Accept: "application/json",
+    },
+  },
+});
 
-// Fetch likes
+// Fetch likes from row with id=1
 export async function getLikes() {
-  const { data, error } = await supabase
-    .from("profile_likes")
-    .select("likes")
-    .eq("id", 1)       // assume row with id=1 exists
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("profile_likes")
+      .select("likes")
+      .eq("id", 1)
+      .single();
 
-  if (error) {
-    console.error("Error fetching likes:", error);
+    if (error) throw error;
+    return data?.likes || 0;
+  } catch (err) {
+    console.error("Error fetching likes:", err.message);
     return 0;
   }
-  return data.likes || 0;
 }
 
-// Increment likes
+// Increment likes using update
 export async function incrementLikes() {
-  const { data, error } = await supabase
-    .from("profile_likes")
-    .update({ likes: supabase.raw("likes + 1") })
-    .eq("id", 1)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("profile_likes")
+      .update({ likes: supabase.literal("likes + 1") }) // increment likes
+      .eq("id", 1)
+      .select()
+      .single();
 
-  if (error) {
-    console.error("Error incrementing likes:", error);
+    if (error) throw error;
+    return data?.likes || 0;
+  } catch (err) {
+    console.error("Error incrementing likes:", err.message);
     return 0;
   }
-  return data.likes;
 }
