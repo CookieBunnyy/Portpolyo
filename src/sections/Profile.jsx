@@ -12,6 +12,7 @@ export default function Profile() {
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [profileViews, setProfileViews] = useState(0);
 
    useEffect(() => {
     // Only fetch in production
