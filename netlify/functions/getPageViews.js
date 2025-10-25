@@ -1,45 +1,28 @@
-// netlify/functions/getPageViews.js
+import fetch from "node-fetch";
 
 export async function handler(event) {
-  // ✅ Replace with your actual Umami website ID and API token
-  const websiteId = "07f9f317-50eb-49fe-87c7-c35e438623eb";
-  const token = "api_CwU3XrKcTgeSJ0ZgvtPuoINSHg899Xzb";
-
-  // Get the path you want to check, default to /profile
-  const path = event.queryStringParameters.path || "/profile";
+  const path = event.queryStringParameters.path;
+  const UMAMI_API_URL = process.env.UMAMI_API_URL;
+  const UMAMI_WEBSITE_ID = process.env.UMAMI_WEBSITE_ID;
 
   try {
-    const response = await fetch(
-      `https://analytics.umami.is/api/websites/${websiteId}/stats?url=${path}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.UMAMI_TOKEN}`,
-          Accept: "application/json",
-        },
-      }
+    const res = await fetch(
+      `${UMAMI_API_URL}/api/websites/${UMAMI_WEBSITE_ID}/stats?url=${path}`
     );
 
-    if (!response.ok) {
-      throw new Error(`Umami API returned ${response.status}`);
+    if (!res.ok) {
+      return { statusCode: res.status, body: await res.text() };
     }
 
-    const data = await response.json();
-
+    const data = await res.json();
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        views: data?.pageviews?.value || 0,
-      }),
+      body: JSON.stringify({ views: data.pageviews }),
     };
-  } catch (error) {
-    console.error("Error fetching Umami stats:", error);
+  } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ error: err.message }),
     };
   }
 }

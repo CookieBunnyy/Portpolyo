@@ -5,7 +5,7 @@ import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
 import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
-import { getPageViews } from "../utils/umami";
+
 
 export default function Profile() {
   useTrackView("profile");
@@ -15,12 +15,23 @@ export default function Profile() {
   const [isAnimating, setIsAnimating] = useState(false);
 
    useEffect(() => {
+  if (import.meta.env.PROD) {
     const fetchViews = async () => {
-      const count = await getPageViews("/profile");
-      setViews(count);
+      try {
+        const res = await fetch(`/.netlify/functions/getPageViews?path=/profile`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        setViews(data.views || 0);
+      } catch (err) {
+        console.error("Error fetching profile views:", err);
+        setViews(0); // fallback
+      }
     };
     fetchViews();
-  }, []);
+  } else {
+    setViews(0); // fallback for local development
+  }
+}, []);
 
   const handleImageClick = () => {
     if (isAnimating) return;

@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import { getPageViews } from "../utils/umami";
 
 export default function useProfileViews() {
   const [views, setViews] = useState(0);
 
   useEffect(() => {
-    const websiteId = import.meta.env.VITE_UMAMI_WEBSITE_ID;
-    const token = import.meta.env.VITE_UMAMI_API_TOKEN;
+    if (import.meta.env.DEV) return; // Only fetch on deploy
 
-    async function fetchViews() {
+    const fetchViews = async () => {
       try {
-        const count = await getPageViews(websiteId, "/profile", token);
-        setViews(count);
+        const res = await fetch(
+          `/.netlify/functions/getPageViews?path=/profile`
+        );
+        const data = await res.json();
+        setViews(data.views || 0);
       } catch (err) {
         console.error("Error fetching profile views:", err);
       }
-    }
+    };
 
     fetchViews();
   }, []);

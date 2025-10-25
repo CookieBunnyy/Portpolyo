@@ -9,6 +9,7 @@ import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Contact from "@/sections/Contact";
 import { getPageViews } from "./utils/umami";
+import useProfileViews from "./hooks/useProfileViews";
 
 // Rotating Text Component
 function RotatingPhrases() {
@@ -52,23 +53,24 @@ function RotatingPhrases() {
 export default function App() {
   const [expanded, setExpanded] = useState(null);
   const [profileViews, setProfileViews] = useState(0);
+  
 
-  useEffect(() => {
-  // Only fetch if deployed (production)
-  if (import.meta.env.MODE === "production") {
+ useEffect(() => {
+  if (import.meta.env.PROD) {
     const fetchProfileViews = async () => {
       try {
-        const count = await getPageViews("/profile");
-        setProfileViews(count);
+        const res = await fetch(`/.netlify/functions/getPageViews?path=/profile`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        setProfileViews(data.views || 0);
       } catch (err) {
         console.error("Error fetching profile views:", err);
-        setProfileViews(0); // fallback
+        setProfileViews(0);
       }
     };
     fetchProfileViews();
   } else {
-    // Optional: mock value when developing locally
-    setProfileViews(0);
+    setProfileViews(0); // fallback for local dev
   }
 }, []);
 
