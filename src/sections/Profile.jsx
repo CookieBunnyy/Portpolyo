@@ -18,7 +18,7 @@ export default function Profile() {
   if (import.meta.env.PROD) {
     const fetchViews = async () => {
       try {
-        const res = await fetch(`/.netlify/functions/getPageViews?path=/profile`);
+        const res = await fetch(`/api/getPageViews?path=/profile`);
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setViews(data.views || 0);

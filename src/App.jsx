@@ -59,7 +59,7 @@ export default function App() {
   if (import.meta.env.PROD) {
     const fetchProfileViews = async () => {
       try {
-        const res = await fetch(`/.netlify/functions/getPageViews?path=/profile`);
+        const res = await fetch(`/api/getPageViews?path=/profile`);
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setProfileViews(data.views || 0);
