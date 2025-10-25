@@ -5,12 +5,14 @@ import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
 import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
+import useProfileViews from "../hooks/useProfileViews";
 
 export default function Profile() {
   useTrackView("profile");
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const views = useProfileViews();
 
   const handleImageClick = () => {
     if (isAnimating) return;
@@ -90,9 +92,9 @@ export default function Profile() {
 
           {/* Views */}
           <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">
-            <Eye className="text-green-600 dark:text-green-400" size={18} />
-            <strong className="text-neutral-800 dark:text-neutral-100">16</strong>
-          </div>
+      <Eye className="text-green-600 dark:text-green-400" size={18} />
+      <strong className="text-neutral-800 dark:text-neutral-100">{views}</strong>
+    </div>
 
           {/* Rating */}
           <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-zinc-700 dark:text-neutral-300">

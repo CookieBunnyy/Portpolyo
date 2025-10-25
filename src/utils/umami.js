@@ -6,3 +6,11 @@ export const trackEvent = (eventName, data = {}) => {
     console.warn("Umami not initialized yet:", eventName);
   }
 };
+
+export async function getPageViews(websiteId, path, token) {
+  const response = await fetch(`https://analytics.umami.is/api/websites/${websiteId}/stats?url=${path}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await response.json();
+  return data.pageviews?.value || 0;
+};

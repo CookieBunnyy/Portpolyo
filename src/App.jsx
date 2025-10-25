@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Home, User, FolderGit2, Mail } from "lucide-react";
 import { Card, CardHeader } from "@components/ui/card";
 import "./index.css";
-
+import useProfileViews from "./hooks/useProfileViews";
 import ThemeToggle from "@/components/ThemeToggle";
 import Profile from "@/sections/Profile";
 import About from "@/sections/About";
@@ -18,6 +18,7 @@ function RotatingPhrases() {
     "Got an idea? I’d love to hear it.",
     "Reach out and let’s collaborate!",
   ];
+  const profileViews = useProfileViews();
 
   const [index, setIndex] = useState(0);
 
@@ -228,35 +229,35 @@ export default function App() {
       </div>
 
       {/* Profile Views and Ratings */}
-      <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm">
-        <div className="flex items-center gap-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4 text-green-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-            />
-          </svg>
-          <span>16 visits</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="text-yellow-400 text-base">★</span>
-          <span>4.8</span>
-        </div>
+       <div className="flex justify-between items-center text-neutral-800 dark:text-neutral-400 text-sm">
+      <div className="flex items-center gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4 h-4 text-green-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+          />
+        </svg>
+        <span>{profileViews} visits</span>
       </div>
+      <div className="flex items-center gap-1">
+        <span className="text-yellow-400 text-base">★</span>
+        <span>4.8</span>
+      </div>
+    </div>
     </motion.div>
   </Card>
 </motion.div>
