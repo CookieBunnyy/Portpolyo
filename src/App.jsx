@@ -51,7 +51,7 @@ export default function App() {
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",
     about: "max-w-7xl min-h-[90vh]",
-    projects: "max-w-6xl min-h-[80vh]",
+    projects: "max-w-6xl min-h-[70vh]",
     contact: "max-w-4xl min-h-[96vh]",
   };
 
@@ -70,12 +70,7 @@ export default function App() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-linear-to-br from-stone-300 via-stone-300/80 to-stone-400/60 
-                 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-900 
-                 text-neutral-900 dark:text-white flex flex-col items-center p-6 relative 
-                 transition-colors duration-500 overflow-y-auto"
-    >
+    <div className="min-h-screen bg-linear-to-br from-stone-300 via-stone-300/80 to-stone-400/60 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-900 text-neutral-900 dark:text-white flex flex-col items-center p-6 relative overflow-y-auto transition-colors duration-500">
       {/* Title */}
       <div className="absolute top-6 left-6 text-3xl font-bold text-green-500 dark:text-green-400">
         <h1>Portpolyo.</h1>
@@ -419,7 +414,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.5 }}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center overflow-auto pt-19"
+              className="absolute  inset-0 z-30 flex flex-col items-center justify-center overflow-visible pt-19"
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
@@ -427,7 +422,7 @@ export default function App() {
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.4 }}
                 className={`w-full p-15 ${
-                  expandedSizes[expanded] || "max-w-7xl min-h-[70vh]"
+                  expandedSizes[expanded] || "max-w-7xl min-h-[60vh]"
                 }`}
               >
                 {expanded === "profile" && <Profile />}

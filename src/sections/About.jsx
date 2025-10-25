@@ -23,7 +23,7 @@ export default function About() {
     <div className="p-10 sm:p-8 lg:p-10 rounded-2xl bg-stone-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 h-full flex flex-col backdrop-blur-md shadow-lg border border-stone-400/30 dark:border-neutral-700 overflow-y-auto">
       <h2 className="text-2xl font-bold mb-3">About</h2>
 
-      {/* 🧍 About Paragraph */}
+      {/* About P */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ export default function About() {
         future where innovation meets imagination.
       </motion.p>
 
-      {/* 🧰 Skills Section */}
+      {/* Skills Sect */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -122,7 +122,7 @@ export default function About() {
         </div>
       </motion.div>
 
-      {/* 💻 Programming Languages */}
+      {/* Programming Languages */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
