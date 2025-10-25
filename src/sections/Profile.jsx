@@ -7,7 +7,7 @@ import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
 
 
-export default function Profile({ profileViews }) {
+export default function Profile() {
   useTrackView("profile");
   const tags = ["Photographer", "Gamer", "Video Editor", "Programmer"];
   const [isFlipped, setIsFlipped] = useState(false);
