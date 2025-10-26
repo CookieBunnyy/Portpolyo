@@ -28,15 +28,14 @@ export async function getLikes() {
   }
 }
 
-// Increment likes safely
 export async function incrementLikes() {
   try {
     const { data, error } = await supabase
       .from("profile_likes")
-      .update({ likes: supabase.increment(1) })
+      .update({ likes: { increment: 1 } }) // ✅ use object syntax
       .eq("id", 1)
       .select()
-      .maybeSingle(); // ✅ prevents 406
+      .maybeSingle();
 
     if (error) throw error;
     return data?.likes || 0;
