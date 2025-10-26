@@ -31,7 +31,7 @@ export async function incrementLikes() {
   try {
     const { data, error } = await supabase
       .from("profile_likes")
-      .update({ likes: { increment: 1 } }) // correct v2 syntax
+      .update({ likes: supabase.increment(1) }) // ✅ correct
       .eq("id", 1)
       .select()
       .maybeSingle();
