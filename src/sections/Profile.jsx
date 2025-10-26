@@ -1,5 +1,5 @@
 import React, {  useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {FolderGit2, Mail, Download, Heart } from "lucide-react";
 import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
@@ -121,8 +121,9 @@ export default function Profile() {
         <motion.div
           key={likes} // trigger re-animation on like change
           initial={{ scale: 1 }}
-          animate={animateLike ? { scale: 1.5, rotate: [0, 10, -10, 0] } : { scale: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          animate={animateLike ? { scale: 1.5, rotate: 10 } : { scale: 1, rotate: 0 }}
+transition={{ type: "spring", stiffness: 300, damping: 20 }}
+
         >
           <Heart size={18} fill={likes > 0 ? "green" : "none"} strokeWidth={2} />
         </motion.div>
