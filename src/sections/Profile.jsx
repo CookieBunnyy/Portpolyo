@@ -16,8 +16,14 @@ export default function Profile() {
   const [likes, setLikes] = useState(0);
   const [isLiking, setIsLiking] = useState(false); // prevent multiple rapid clicks
   const [animateLike, setAnimateLike] = useState(false); // trigger animation
+  const [liked, setLiked] = useState(false);
 
-
+  
+  let visitorId = localStorage.getItem("visitorId");
+  if (!visitorId) {
+    visitorId = crypto.randomUUID(); // or any unique string
+    localStorage.setItem("visitorId", visitorId);
+  }
    
 
   const handleImageClick = () => {
@@ -35,20 +41,23 @@ export default function Profile() {
     async function fetchData() {
       const totalLikes = await getLikes();
       setLikes(totalLikes);
+      
 
-      const alreadyLiked = await hasLiked(1, userId);
+      const alreadyLiked = await hasLiked(1, visitorId);
       setLiked(alreadyLiked);
     }
     fetchData();
-  }, [userId]);
+  }, [visitorId]);
 
   const handleLike = async () => {
     if (isLiking || liked) return; // prevent multiple clicks
     setIsLiking(true);
+    setAnimateLike(true);
 
-    const totalLikes = await toggleLike(1, userId);
+    const totalLikes = await toggleLike(1, visitorId);
     setLikes(totalLikes);
     setLiked(true);
+    setTimeout(() => setAnimateLike(false), 300);
 
     setTimeout(() => setIsLiking(false), 500);
   };
@@ -115,7 +124,7 @@ export default function Profile() {
         <motion.div
         onClick={handleLike}
         whileTap={{ scale: 0.9 }}
-        animate={{ scale: liked ? 1.2 : 1 }}
+        animate={animateLike ? { scale: 1.5, rotate: 10 } : { scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         <Heart size={20} fill={liked ? "currentColor" : "none"} strokeWidth={2} />
