@@ -153,7 +153,7 @@ export default function App() {
   variants={cardVariants}
   className="lg:col-span-1 lg:row-span-2"
 >
-  <Card likes={likes} setLikes={setLikes}
+  <Card 
     onClick={() => setExpanded("profile")}
     className="h-full rounded-3xl p-6 bg-stone-200 dark:bg-neutral-800 text-neutral-100 cursor-pointer hover:scale-[1.02] transition-transform flex flex-col items-start justify-start shadow-xl border border-stone-400/30 dark:border-neutral-700"
   >
