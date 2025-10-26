@@ -6,6 +6,16 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Generate or retrieve a persistent visitor ID
+export function getVisitorId() {
+  let visitorId = localStorage.getItem("visitorId");
+  if (!visitorId) {
+    visitorId = crypto.randomUUID();
+    localStorage.setItem("visitorId", visitorId);
+  }
+  return visitorId;
+}
+
 // Fetch total likes for a profile
 export async function getLikes(profileId = 1) {
   try {
@@ -23,7 +33,7 @@ export async function getLikes(profileId = 1) {
   }
 }
 
-// Check if the current visitor has liked
+// Check if this visitor has already liked
 export async function hasLiked(profileId = 1, visitorId) {
   if (!visitorId) return false;
 
@@ -43,19 +53,22 @@ export async function hasLiked(profileId = 1, visitorId) {
   }
 }
 
-// Toggle like for visitor (only once per visitor)
+// Toggle like for this visitor (only once)
 export async function toggleLike(profileId = 1, visitorId) {
   if (!visitorId) return 0;
 
   try {
+    // Upsert will insert if not exists, do nothing if already exists
     const { error } = await supabase
       .from("profile_likes_user")
-      .insert([{ visitor_id: visitorId, profile_id: profileId, liked: true }])
-      .onConflict(["profile_id", "visitor_id"])
-      .ignore();
+      .upsert(
+        { profile_id: profileId, visitor_id: visitorId, liked: true },
+        { onConflict: ["profile_id", "visitor_id"] }
+      );
 
     if (error) throw error;
 
+    // Return updated total likes
     return await getLikes(profileId);
   } catch (err) {
     console.error("Error toggling like:", err.message);

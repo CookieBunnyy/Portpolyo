@@ -5,7 +5,7 @@ import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
 import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
-import { getLikes, hasLiked, toggleLike } from "../utils/supabase";
+import { getLikes, hasLiked, toggleLike, getVisitorId } from "../utils/supabase";
 
 export default function Profile() {
   useTrackView("profile");
@@ -18,30 +18,20 @@ export default function Profile() {
   const [animateLike, setAnimateLike] = useState(false);
   const [liked, setLiked] = useState(false);
 
-  // Generate a persistent visitor ID per device/browser
-  const getVisitorId = () => {
-    let visitorId = localStorage.getItem("visitorId");
-    if (!visitorId) {
-      visitorId = crypto.randomUUID();
-      localStorage.setItem("visitorId", visitorId);
-    }
-    return visitorId;
-  };
   const visitorId = getVisitorId();
 
   // Image flip handler
   const handleImageClick = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-
-    setTimeout(() => setIsFlipped((prev) => !prev), 200);
+    setTimeout(() => setIsFlipped(prev => !prev), 200);
     setTimeout(() => setIsAnimating(false), 300);
   };
 
-  // Fetch likes and visitor like status on mount
+  // Fetch total likes and visitor status on mount
   useEffect(() => {
     async function fetchData() {
-      const totalLikes = await getLikes();
+      const totalLikes = await getLikes(1);
       setLikes(totalLikes);
 
       const alreadyLiked = await hasLiked(1, visitorId);
@@ -71,6 +61,7 @@ export default function Profile() {
                       lg:flex-row gap-6 sm:gap-8 relative border border-stone-300/40 
                       dark:border-neutral-700 shadow-lg transition-colors duration-500
                       overflow-y-auto">
+
         {/* Left Section */}
         <div className="flex flex-col items-center lg:items-start gap-4 px-2 sm:px-3 shrink-0">
           <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Profile</h2>
