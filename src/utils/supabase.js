@@ -1,8 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Load environment variables
+// Load environment variables (Vite + Netlify)
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Debug: check env variables
+console.log("Supabase URL:", supabaseUrl);
+console.log("Supabase Key:", supabaseKey);
 
 if (!supabaseUrl || !supabaseKey) {
   console.error("Supabase URL or API key is missing!");
@@ -11,7 +15,7 @@ if (!supabaseUrl || !supabaseKey) {
 // Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Fetch likes (safe for empty or missing row)
+// Fetch likes safely
 export async function getLikes() {
   try {
     const { data, error } = await supabase
@@ -28,11 +32,12 @@ export async function getLikes() {
   }
 }
 
+// Increment likes safely
 export async function incrementLikes() {
   try {
     const { data, error } = await supabase
       .from("profile_likes")
-      .update({ likes: { increment: 1 } }) // ✅ use object syntax
+      .update({ likes: { increment: 1 } }) // ✅ correct increment syntax
       .eq("id", 1)
       .select()
       .maybeSingle();
