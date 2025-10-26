@@ -1,4 +1,4 @@
-import { createClient, sql } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 // Use either .env variables or hardcoded for testing
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://sbcvbaxnpwybzkjitfsm.supabase.co";
@@ -28,9 +28,19 @@ export async function getLikes() {
 // Increment likes
 export async function incrementLikes() {
   try {
+    // First get the current likes value
+    const { data: current } = await supabase
+      .from("profile_likes")
+      .select("likes")
+      .eq("id", 1)
+      .maybeSingle();
+
+    const currentLikes = current?.likes || 0;
+
+    // Then update with the incremented value
     const { data, error } = await supabase
       .from("profile_likes")
-      .update({ likes: sql`likes + 1` })
+      .update({ likes: currentLikes + 1 })
       .eq("id", 1)
       .select()
       .maybeSingle();
