@@ -125,7 +125,7 @@ export default function Profile() {
 transition={{ type: "spring", stiffness: 300, damping: 20 }}
 
         >
-          <Heart size={18} fill={likes > 0 ? "green" : "none"} strokeWidth={2} />
+          <Heart size={20} fill={likes > 0 ? "currentColor" : "none"} strokeWidth={2} />
         </motion.div>
       </AnimatePresence>
       <span>{likes}</span>
