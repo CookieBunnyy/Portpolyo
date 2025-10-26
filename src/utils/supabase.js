@@ -1,43 +1,73 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Use either .env variables or hardcoded for testing
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://sbcvbaxnpwybzkjitfsm.supabase.co";
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_IV69thWbe9X9Z5ms-Ss40Q_t0NHf1he";
-
-console.log("Supabase URL:", supabaseUrl);
-console.log("Supabase Key:", supabaseKey);
+// Vite environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function getLikes() {
+// Fetch total likes for a profile
+export async function getLikes(profileId = 1) {
   try {
     const { data, error } = await supabase
-      .from("profile_likes")
-      .select("likes")
-      .eq("id", 1)
-      .maybeSingle();
+      .from("profile_likes_user")
+      .select("id", { count: "exact" })
+      .eq("profile_id", profileId)
+      .eq("liked", true);
 
     if (error) throw error;
-    return data?.likes || 0;
+    return data?.length || 0;
   } catch (err) {
     console.error("Error fetching likes:", err.message);
     return 0;
   }
 }
 
-export async function incrementLikes() {
+// Check if the current user has liked
+export async function hasLiked(profileId = 1, userId) {
+  if (!userId) return false;
+  const { data, error } = await supabase
+    .from("profile_likes_user")
+    .select("liked")
+    .eq("profile_id", profileId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error checking like status:", error.message);
+    return false;
+  }
+
+  return data?.liked || false;
+}
+
+// Increment like (or create if not exists)
+export async function toggleLike(profileId = 1, userId) {
+  if (!userId) return 0;
+
   try {
-    const { data, error } = await supabase
-      .from("profile_likes")
-      .update({ likes: 1 }) // we’ll increment manually
-      .eq("id", 1)
-      .select()
+    // Check if user already liked
+    const { data } = await supabase
+      .from("profile_likes_user")
+      .select("liked")
+      .eq("profile_id", profileId)
+      .eq("user_id", userId)
       .maybeSingle();
 
-    if (error) throw error;
-    return data?.likes || 0;
+    if (data) {
+      // If already liked, do nothing
+      return await getLikes(profileId);
+    } else {
+      // Insert new like
+      const { error } = await supabase
+        .from("profile_likes_user")
+        .insert([{ user_id: userId, profile_id: profileId, liked: true }]);
+
+      if (error) throw error;
+      return await getLikes(profileId);
+    }
   } catch (err) {
-    console.error("Error incrementing likes:", err.message);
-    return 0;
+    console.error("Error toggling like:", err.message);
+    return await getLikes(profileId);
   }
 }

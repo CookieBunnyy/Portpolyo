@@ -5,7 +5,7 @@ import CVResume from "../assets/CV_Resume.pdf";
 import pic from "../assets/pic.jpg";
 import alien from "../assets/alien.png";
 import { useTrackView } from "../hooks/useTrackView";
-import { getLikes, incrementLikes } from "../utils/supabase";
+import { supabase, getLikes, hasLiked, toggleLike } from "../utils/supabase";
 
 
 export default function Profile() {
@@ -32,33 +32,27 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    async function fetchLikes() {
-      try {
-        const currentLikes = await getLikes();
-        setLikes(currentLikes);
-      } catch (err) {
-        console.error("Failed to fetch likes:", err.message);
-      }
-    }
-    fetchLikes();
-  }, []);
+    async function fetchData() {
+      const totalLikes = await getLikes();
+      setLikes(totalLikes);
 
-  // Handle like button click
+      const alreadyLiked = await hasLiked(1, userId);
+      setLiked(alreadyLiked);
+    }
+    fetchData();
+  }, [userId]);
+
   const handleLike = async () => {
-    if (isLiking) return;
+    if (isLiking || liked) return; // prevent multiple clicks
     setIsLiking(true);
-    setAnimateLike(true); // trigger animation
 
-    try {
-      const newLikes = await incrementLikes();
-      setLikes(newLikes);
-    } catch (err) {
-      console.error("Failed to increment likes:", err.message);
-    } finally {
-      setTimeout(() => setIsLiking(false), 500);
-      setTimeout(() => setAnimateLike(false), 300); // reset animation
-    }
+    const totalLikes = await toggleLike(1, userId);
+    setLikes(totalLikes);
+    setLiked(true);
+
+    setTimeout(() => setIsLiking(false), 500);
   };
+
 
   return (
     <section id="profile">
@@ -119,14 +113,13 @@ export default function Profile() {
     >
       <AnimatePresence>
         <motion.div
-          key={likes} // trigger re-animation on like change
-          initial={{ scale: 1 }}
-          animate={animateLike ? { scale: 1.5, rotate: 10 } : { scale: 1, rotate: 0 }}
-transition={{ type: "spring", stiffness: 300, damping: 20 }}
-
-        >
-          <Heart size={20} fill={likes > 0 ? "currentColor" : "none"} strokeWidth={2} />
-        </motion.div>
+        onClick={handleLike}
+        whileTap={{ scale: 0.9 }}
+        animate={{ scale: liked ? 1.2 : 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <Heart size={20} fill={liked ? "currentColor" : "none"} strokeWidth={2} />
+      </motion.div>
       </AnimatePresence>
       <span>{likes}</span>
     </motion.div>
