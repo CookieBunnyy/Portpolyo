@@ -26,7 +26,6 @@ export async function getLikes() {
   }
 }
 
-// Increment likes
 export async function incrementLikes() {
   try {
     const { data, error } = await supabase
