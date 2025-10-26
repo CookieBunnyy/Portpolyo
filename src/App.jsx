@@ -226,8 +226,9 @@ export default function App() {
     </motion.div>
     
     <div className="flex items-center gap-2 text-green-600 dark:text-green-400 mb-4">
-        <Heart size={20} fill={likes > 0 ? "red" : "none"} strokeWidth={2} />
-        <span>{likes}</span> </div>
+  <Heart size={20} fill={likes > 0 ? "currentColor" : "none"} strokeWidth={2} />
+  <span>{likes}</span>
+</div>
   </Card>
 </motion.div>
 
