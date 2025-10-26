@@ -1,28 +1,22 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Load environment variables (Vite + Netlify)
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Use either .env variables or hardcoded for testing
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://sbcvbaxnpwybzkjitfsm.supabase.co";
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_IV69thWbe9X9Z5ms-Ss40Q_t0NHf1he";
 
-// Debug: check env variables
 console.log("Supabase URL:", supabaseUrl);
 console.log("Supabase Key:", supabaseKey);
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("Supabase URL or API key is missing!");
-}
-
-// Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Fetch likes safely
+// Fetch likes
 export async function getLikes() {
   try {
     const { data, error } = await supabase
       .from("profile_likes")
       .select("likes")
       .eq("id", 1)
-      .maybeSingle(); // ✅ prevents 406 if row missing
+      .maybeSingle();
 
     if (error) throw error;
     return data?.likes || 0;
@@ -32,12 +26,12 @@ export async function getLikes() {
   }
 }
 
-// Increment likes safely
+// Increment likes
 export async function incrementLikes() {
   try {
     const { data, error } = await supabase
       .from("profile_likes")
-      .update({ likes: { increment: 1 } }) // ✅ correct increment syntax
+      .update({ likes: { increment: 1 } }) // correct v2 syntax
       .eq("id", 1)
       .select()
       .maybeSingle();

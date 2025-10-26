@@ -15,6 +15,7 @@ export default function Profile() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isLiking, setIsLiking] = useState(false); // prevent multiple rapid clicks
+  const [animateLike, setAnimateLike] = useState(false); // trigger animation
 
 
    
@@ -32,8 +33,12 @@ export default function Profile() {
 
   useEffect(() => {
     async function fetchLikes() {
-      const currentLikes = await getLikes();
-      setLikes(currentLikes);
+      try {
+        const currentLikes = await getLikes();
+        setLikes(currentLikes);
+      } catch (err) {
+        console.error("Failed to fetch likes:", err.message);
+      }
     }
     fetchLikes();
   }, []);
@@ -42,9 +47,17 @@ export default function Profile() {
   const handleLike = async () => {
     if (isLiking) return;
     setIsLiking(true);
-    const newLikes = await incrementLikes();
-    setLikes(newLikes); // update the shared state in App.jsx
-    setTimeout(() => setIsLiking(false), 500);
+    setAnimateLike(true); // trigger animation
+
+    try {
+      const newLikes = await incrementLikes();
+      setLikes(newLikes);
+    } catch (err) {
+      console.error("Failed to increment likes:", err.message);
+    } finally {
+      setTimeout(() => setIsLiking(false), 500);
+      setTimeout(() => setAnimateLike(false), 300); // reset animation
+    }
   };
 
   return (
@@ -99,14 +112,23 @@ export default function Profile() {
         </div>
 
         {/* Likes Section */}
-         <motion.div
-              className="flex items-center gap-2 cursor-pointer text-green-600 dark:text-green-400 text-sm select-none"
-              onClick={handleLike}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Heart size={18} fill={likes > 0 ? "green" : "none"} strokeWidth={2} />
-              <span>{likes}</span>
-            </motion.div>
+        <motion.div
+      className="flex items-center gap-2 cursor-pointer text-green-600 dark:text-green-400 text-sm select-none"
+      onClick={handleLike}
+      whileTap={{ scale: 0.9 }}
+    >
+      <AnimatePresence>
+        <motion.div
+          key={likes} // trigger re-animation on like change
+          initial={{ scale: 1 }}
+          animate={animateLike ? { scale: 1.5, rotate: [0, 10, -10, 0] } : { scale: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <Heart size={18} fill={likes > 0 ? "green" : "none"} strokeWidth={2} />
+        </motion.div>
+      </AnimatePresence>
+      <span>{likes}</span>
+    </motion.div>
        
       </div>
       {/* Right Section */}
