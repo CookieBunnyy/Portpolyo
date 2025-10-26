@@ -35,11 +35,7 @@ export async function hasLiked(profileId = 1, visitorId) {
       .eq("visitor_id", visitorId)
       .maybeSingle();
 
-    if (error) {
-      console.error("Error checking like status:", error.message);
-      return false;
-    }
-
+    if (error) throw error;
     return data?.liked || false;
   } catch (err) {
     console.error("Error checking like status:", err.message);
@@ -52,7 +48,6 @@ export async function toggleLike(profileId = 1, visitorId) {
   if (!visitorId) return 0;
 
   try {
-    // Try to insert like (ignore if visitor already liked)
     const { error } = await supabase
       .from("profile_likes_user")
       .insert([{ visitor_id: visitorId, profile_id: profileId, liked: true }])
@@ -61,7 +56,6 @@ export async function toggleLike(profileId = 1, visitorId) {
 
     if (error) throw error;
 
-    // Return updated total likes
     return await getLikes(profileId);
   } catch (err) {
     console.error("Error toggling like:", err.message);
