@@ -9,7 +9,6 @@ console.log("Supabase Key:", supabaseKey);
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Fetch likes
 export async function getLikes() {
   try {
     const { data, error } = await supabase
@@ -26,11 +25,12 @@ export async function getLikes() {
   }
 }
 
+// Increment likes
 export async function incrementLikes() {
   try {
     const { data, error } = await supabase
       .from("profile_likes")
-      .update({ likes: supabase.increment(1) }) // ✅ correct
+      .update({ likes: supabase.increment(1) }) // ✅ correct v2 syntax
       .eq("id", 1)
       .select()
       .maybeSingle();
