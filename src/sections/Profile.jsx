@@ -262,8 +262,8 @@ useEffect(() => {
             <motion.button
               onClick={handleDownload}
               whileHover={{scale: 1.02}}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500/20 
-                         hover:bg-green-400/60 transition-all rounded-lg"
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 dark:bg-green-700
+                         dark:hover:bg-green-500 text-white transition-all rounded-lg "
             >
               <Download size={18} /> Download CV
             </motion.button>
