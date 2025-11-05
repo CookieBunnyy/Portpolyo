@@ -221,7 +221,7 @@ export default function App({ setStage }) {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="w-32 h-32 rounded-full object-cover border-3 border-green-00 dark:border-green-500 shadow-lg mb-1 self-center"
+      className="w-32 h-32 rounded-full object-cover border-3 border-green-500 dark:border-green-500 shadow-lg mb-1 self-center"
     />
 
    
