@@ -145,7 +145,7 @@ export default function App({ setStage }) {
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="absolute -bottom-15 left-0 bg-green-500/90 dark:bg-green-400/90 text-white dark:text-neutral-900 text-sm px-3 py-1 rounded-lg shadow-lg"
             >
-              Go Back to Opening page
+              Go back to opening page
               
              
               <div className="absolute left-4 -top-2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-green-500 dark:border-b-green-400"></div>
