@@ -14,7 +14,7 @@ export default function Opening({ onProceed }) {
       exit={{ opacity: 0, y: -100 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
-      {/* Global Theme Toggle (does not trigger onProceed) */}
+      
       <div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-6 right-6 z-50"
@@ -22,7 +22,7 @@ export default function Opening({ onProceed }) {
         <ThemeToggle />
       </div>
 
-      {/* Title */}
+ 
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: 30 }}
@@ -35,7 +35,7 @@ export default function Opening({ onProceed }) {
         </h2>
       </motion.div>
 
-      {/* Click Indicator */}
+
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: [0, 1, 1, 0] }}

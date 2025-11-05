@@ -1,12 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Opening from "./components/Opening.jsx";
 import Introduction from "./components/Introduction.jsx";
 import App from "./App.jsx";
 
 export default function Structure() {
-  const [stage, setStage] = useState("opening"); // "opening" → "intro" → "app"
+  const [stage, setStage] = useState(
+    localStorage.getItem("currentStage") || "opening"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("currentStage", stage);
+  }, [stage]);
 
   return (
     <AnimatePresence mode="wait">
@@ -41,7 +47,8 @@ export default function Structure() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <App />
+          
+          <App setStage={setStage} />
         </motion.div>
       )}
     </AnimatePresence>

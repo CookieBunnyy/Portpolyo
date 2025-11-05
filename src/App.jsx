@@ -8,10 +8,10 @@ import Profile from "@/sections/Profile";
 import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Contact from "@/sections/Contact";
-import { getLikes } from "@/utils/supabase";
+import { supabase, getLikes } from "@/utils/supabase";
 
 
-// Rotating Text Component
+
 function RotatingPhrases() {
   const phrases = [
     "Let's create something amazing together.",
@@ -50,25 +50,56 @@ function RotatingPhrases() {
   );
 }
 
-export default function App() {
-  const [expanded, setExpanded] = useState(null);
+export default function App({ setStage }) {
+  const [expanded, setExpanded] = useState(() => localStorage.getItem("currentSection") || null);
   const [likes, setLikes] = useState(0);
+  const [showTooltip, setShowTooltip] = useState(false);
   
   
-  // Fetch likes on mount
+
   useEffect(() => {
+    localStorage.setItem("currentSection", expanded || "");
+  }, [expanded]);
+
+  useEffect(() => {
+    setShowTooltip(true);
+    const timer = setTimeout(() => setShowTooltip(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+   useEffect(() => {
     async function fetchLikes() {
       const currentLikes = await getLikes();
       setLikes(currentLikes);
+      localStorage.setItem("likes", JSON.stringify(currentLikes));
     }
     fetchLikes();
   }, []);
 
-  const handleLike = async () => {
-    const newLikes = await incrementLikes();
-    setLikes(newLikes);
+    useEffect(() => {
+    const channel = supabase
+      .channel("likes-realtime")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "likes" },
+        (payload) => {
+          if (payload?.new?.count !== undefined) {
+            setLikes(payload.new.count);
+            localStorage.setItem("likes", JSON.stringify(payload.new.count));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const handleGoBack = () => {
+    localStorage.setItem("currentStage", "opening");
+    setStage("opening");
   };
- 
 
   const expandedSizes = {
     profile: "max-w-4xl min-h-[70vh]",
@@ -77,7 +108,7 @@ export default function App() {
     contact: "max-w-4xl min-h-[96vh]",
   };
 
-  // Animation Variants
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -91,19 +122,45 @@ export default function App() {
     show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
+
+  // Render Part
   return (
     <div className="min-h-screen bg-linear-to-br from-stone-300 via-stone-300/80 to-stone-400/60 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-900 text-neutral-900 dark:text-white flex flex-col items-center p-6 relative overflow-y-auto transition-colors duration-500">
-      {/* Title */}
-      <div className="absolute top-6 left-6 text-3xl font-bold text-green-500 dark:text-green-400">
+    
+      <div
+        className="absolute top-6 left-6 text-3xl font-bold text-green-500 dark:text-green-400 cursor-pointer select-none"
+        onClick={handleGoBack}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
         <h1>Portpolyo.</h1>
+
+       
+        <AnimatePresence>
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="absolute -bottom-15 left-0 bg-green-500/90 dark:bg-green-400/90 text-white dark:text-neutral-900 text-sm px-3 py-1 rounded-lg shadow-lg"
+            >
+              Go Back to Opening page
+              
+             
+              <div className="absolute left-4 -top-2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-green-500 dark:border-b-green-400"></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Global Theme Toggle */}
+      
+      
       <div className="absolute top-6 right-6 z-50">
         <ThemeToggle />
       </div>
 
-      {/* Navbar */}
+      
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -137,7 +194,7 @@ export default function App() {
         ))}
       </motion.nav>
 
-      {/* Main Content */}
+     
       <div className="pt-24 w-full flex justify-center items-center">
         <AnimatePresence mode="wait">
           {!expanded && (
@@ -157,7 +214,7 @@ export default function App() {
     onClick={() => setExpanded("profile")}
     className="h-full rounded-3xl p-6 bg-stone-200 dark:bg-neutral-800 text-neutral-100 cursor-pointer hover:scale-[1.02] transition-transform flex flex-col items-start justify-start shadow-xl border border-stone-400/30 dark:border-neutral-700"
   >
-    {/* Profile Picture */}
+   
     <motion.img
       src="/images/pic.jpg"
       alt="profile pic"
@@ -167,7 +224,7 @@ export default function App() {
       className="w-32 h-32 rounded-full object-cover border-3 border-green-00 dark:border-green-500 shadow-lg mb-1 self-center"
     />
 
-    {/*Intro*/}
+   
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -186,7 +243,7 @@ export default function App() {
 
 
       
-      {/* Tags */}
+      
       <div className="flex flex-wrap gap-2 mb-3">
         {["Photographer", "Gamer", "Video Editor", "Programmer"].map(
           (tag, index) => (
@@ -204,7 +261,7 @@ export default function App() {
       </div>
     </motion.div>
 
-    {/* Details */}
+   
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -233,7 +290,7 @@ export default function App() {
 </motion.div>
 
 
-              {/* About Card */}
+              
 <motion.div variants={cardVariants} className="lg:col-span-2 lg:row-span-1">
   <Card
     onClick={() => setExpanded("about")}
@@ -242,7 +299,7 @@ export default function App() {
       About
     </CardHeader>
 
-    {/* Bio Preview */}
+    
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -271,11 +328,11 @@ export default function App() {
         
       </p>
       
-      {/* Fade-out effect */}
+      
       <div className="absolute bottom-0 left-0 w-full h-12 bg-linear-to-t from-stone-200 to-transparent dark:bg-linear-to-t dark:from-neutral-800 dark:to-transparent pointer-events-none"></div>
     </motion.div>
 
-    {/* See More Indicator */}
+    
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -294,21 +351,21 @@ export default function App() {
 </motion.div>
 
 
-             {/* Projects Card */}
+             
 <motion.div variants={cardVariants} className="lg:col-span-1 lg:row-span-1">
   <Card
     onClick={() => setExpanded("projects")}
     className="h-full rounded-3xl p- bg-stone-200 dark:bg-neutral-800 dark:text-neutral-100 text-neutral-800 cursor-pointer hover:scale-[1.02] transition-transform border-stone-400/30 dark:border-neutral-700 flex flex-col justify-between"
   >
-    {/* Header with Project Count */}
+    
     <div className="flex justify-between items-center ">
       <CardHeader className="text-l font-semibold text-left ">Projects</CardHeader>
       <span className="text-sm font-medium bg-green-500/20 text-green-600 dark:text-green-400 dark:bg-green-500/10 px-3 py-1 rounded-full">
-        2 Projects
+        4 Projects
       </span>
     </div>
 
-    {/* Project List */}
+   
     <div className="space-y-3 text-sm ">
       <div className="p-2 rounded-xl bg-white/50 dark:bg-neutral-700/40 hover:bg-white/70 dark:hover:bg-neutral-700/60 transition border border-stone-400/30 dark:border-neutral-700 shadow-lg">
         <p className="font-semibold text-green-600 dark:text-green-400">EasySched (Scheduler)</p>
@@ -331,7 +388,7 @@ export default function App() {
 </motion.div>
 
 
-        {/* Contact Card */}
+       
               <motion.div variants={cardVariants} className="lg:col-span-1  lg:row-span-1 lg:col-start-3">
                 <Card
                   onClick={() => setExpanded("contact")}
@@ -342,7 +399,7 @@ export default function App() {
                 >
                   <CardHeader className="text-l font-semibold text-left">Contact Me</CardHeader>
 
-                  {/* Mail Icon */}
+                 
                   <motion.div
                     whileHover={{ scale: 1.15, rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.6, ease: "easeInOut" }}
@@ -351,7 +408,7 @@ export default function App() {
                     <Mail className="w-30 h-30 text-green-500 transition-transform duration-300 stroke-1" />
                   </motion.div>
 
-                  {/* "Click to Proceed" Overlay */}
+                  
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileHover={{ opacity: 1, scale: 1 }}
@@ -364,10 +421,10 @@ export default function App() {
                     Let's Connect
                   </motion.div>
 
-                  {/* Rotating Phrases */}
+                  
                   <RotatingPhrases />
 
-                  {/* Faint Overlay */}
+                  
                   <div className="absolute inset-0 bg-linear-to-t from-stone-300/20 via-transparent 
                                   to-transparent dark:from-neutral-700/20 pointer-events-none"></div>
                 </Card>
@@ -376,7 +433,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Expanded Section */}
+      
         <AnimatePresence>
           {expanded && (
             <motion.div

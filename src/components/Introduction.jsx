@@ -18,7 +18,7 @@ export default function Introduction({ onProceed }) {
       exit={{ opacity: 0, y: -100 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
-      {/* Global Theme Toggle (doesn't trigger onProceed) */}
+      
       <div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-6 right-6 z-50"
@@ -26,9 +26,9 @@ export default function Introduction({ onProceed }) {
         <ThemeToggle />
       </div>
 
-      {/* Center Container */}
+     
       <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 w-full">
-        {/* Image Section (moves on top in mobile, shrinks slightly) */}
+      
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ export default function Introduction({ onProceed }) {
           <ImageSwitcher />
         </motion.div>
 
-        {/* Text Section */}
+       
         <motion.div
           className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left max-w-[550px] order-2 lg:order-1"
           initial={{ opacity: 0, x: -30 }}
@@ -70,7 +70,7 @@ export default function Introduction({ onProceed }) {
             the most powerful variables.
           </motion.p>
 
-          {/* Tags */}
+         
           <motion.div
             className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3"
             initial="hidden"
@@ -100,7 +100,7 @@ export default function Introduction({ onProceed }) {
         </motion.div>
       </div>
 
-      {/* Click Indicator */}
+    
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: [0, 1, 1, 0] }}

@@ -29,7 +29,7 @@ export default function ImageSwitcher() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* background card */}
+      {/* backcard */}
       <AnimatePresence mode="sync">
         <motion.img
           key={`bg-${index}`}
@@ -61,7 +61,7 @@ export default function ImageSwitcher() {
         />
       </AnimatePresence>
 
-      {/* foreground card */}
+      {/* forecard */}
       <AnimatePresence mode="wait">
         <motion.img
           key={`front-${index}`}

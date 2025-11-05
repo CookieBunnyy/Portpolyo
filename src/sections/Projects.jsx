@@ -44,7 +44,7 @@ export default function Projects() {
 
   const allTags = ["All", "Java", "Swing", "HTML", "JavaScript", "CSS", "Typescript", "NextJS", "TailwindCSS", "Springboot", "Python"];
   const [selectedTag, setSelectedTag] = useState("All");
-  const [layout, setLayout] = useState("grid"); // grid | list | compact
+  const [layout, setLayout] = useState("grid"); 
 
   const filteredProjects =
     selectedTag === "All"
@@ -65,9 +65,9 @@ export default function Projects() {
         <FolderGit2 className="text-green-500" /> Projects
       </h2>
 
-      {/* Filters and Layout Options */}
+     
       <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-        {/* Tag Filter */}
+        
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -88,7 +88,7 @@ export default function Projects() {
           </select>
         </motion.div>
 
-        {/* Layout Selector */}
+        
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLayout("grid")}
@@ -111,7 +111,7 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Project List */}
+      
       <AnimatePresence mode="wait">
         <motion.div
           key={`${selectedTag}-${layout}`}
@@ -143,7 +143,7 @@ export default function Projects() {
                   {proj.desc}
                 </p>
 
-                {/* Tags */}
+              
                 <div className="flex flex-wrap gap-1 mb-1 p-1">
                   {proj.tags.map((tag, idx) => (
                     <motion.span
@@ -159,7 +159,7 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Buttons */}
+             
 <div
   className={`flex flex-wrap p-1 gap-3 ${
     layout === "list" ? "justify-start mt-25" : ""

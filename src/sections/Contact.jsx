@@ -29,7 +29,7 @@ export default function Contact() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
-  // handle EmailJS submission
+  
   const sendEmail = (e) => {
     e.preventDefault();
     setSending(true);
@@ -44,12 +44,12 @@ export default function Contact() {
       )
       .then(
         () => {
-          setStatus("✅ Message sent successfully!");
+          setStatus("🟢 Message sent successfully!");
           formRef.current.reset();
         },
         (error) => {
           console.error(error);
-          setStatus("❌ Failed to send message. Please try again.");
+          setStatus("🔴 Failed to send message. Please try again.");
         }
       )
       .finally(() => setSending(false));
@@ -65,7 +65,7 @@ export default function Contact() {
             shadow-lg border border-stone-400/30 dark:border-neutral-700
             overflow-y-auto"
     >
-      {/* Header */}
+     
       <motion.h2
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ export default function Contact() {
       </motion.p>
 
       <div className="flex flex-col gap-3">
-        {/* Email Me Button */}
+       
         <motion.button
           onClick={() => setShowForm(!showForm)}
           whileHover={{ scale: 1.02 }}
@@ -109,7 +109,7 @@ export default function Contact() {
           </motion.span>
         </motion.button>
 
-        {/* Dropdown Email Form */}
+        
         <AnimatePresence>
           {showForm && (
             <motion.form
@@ -162,9 +162,9 @@ export default function Contact() {
                            focus:ring-2 focus:ring-green-500 outline-none text-sm resize-none"
               />
 
-              {/* Send Button */}
+             
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
                 disabled={sending}
@@ -176,7 +176,7 @@ export default function Contact() {
                 {sending ? "Sending..." : "Send"}
               </motion.button>
 
-              {/* Status Message */}
+              
               {status && (
                 <p className="text-sm mt-2 text-center text-neutral-700 dark:text-neutral-300">
                   {status}
@@ -186,7 +186,7 @@ export default function Contact() {
           )}
         </AnimatePresence>
 
-        {/* Social Links */}
+       
         <motion.div
           variants={socialContainer}
           initial="hidden"
@@ -204,7 +204,7 @@ export default function Contact() {
             <motion.a
               key={social.name}
               variants={socialItem}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
               href={social.link}
               target="_blank"
