@@ -35,9 +35,10 @@ export default function Opening({ onProceed }) {
         transition={{ duration: 1 }}
       >
         <h1 className="text-lg sm:text-2xl font-medium mb-1">Welcome to</h1>
-        <h2 className="text-6xl sm:text-8xl font-bold text-green-500 dark:text-green-400 leading-none">
+        <h2 className="text-6xl sm:text-8xl font-bold mb-5 text-green-500 dark:text-green-400 leading-none">
           Portpolyo.
         </h2>
+         <h1 className="text-lg sm:text-xsm font-medium mb-1">Created by Rance Gabrielle G. Siroy</h1>
       </motion.div>
 
       

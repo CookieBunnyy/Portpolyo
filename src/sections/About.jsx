@@ -53,7 +53,11 @@ export default function About() {
         <span className="font-semibold text-green-600 dark:text-green-400 transition-colors duration-600">
           Computer Science
         </span>{" "}
-        student in Cavite State University - Bacoor City Campus and aspiring front-end developer with a deep passion for
+        student in {" "}
+        <span className="font-semibold text-green-600 dark:text-green-400 transition-colors duration-600">
+        Cavite State University - Bacoor City Campus 
+        </span> {" "}
+        and aspiring front-end developer with a deep passion for
         creating meaningful and engaging digital experiences. I love building
         responsive, accessible, and visually appealing websites that blend
         creativity with functionality. Aside from coding, I’m also into{" "}
