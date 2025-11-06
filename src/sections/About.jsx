@@ -1,22 +1,32 @@
 import { motion } from "framer-motion";
+import {
+  Brush,
+  PenTool,
+  Figma,
+  Code2,
+  FileCode2,
+  TerminalSquare,
+  Globe,
+  Palette,
+} from "lucide-react";
 
 export default function About() {
   const skillSet = [
-    "Adobe Photoshop",
-    "Adobe Illustrator",
-    "Figma",
-    "Visual Studio Code",
-    "Lucide Chart",
+    { name: "Adobe Photoshop", icon: <Brush size={16} /> },
+    { name: "Adobe Illustrator", icon: <PenTool size={16} /> },
+    { name: "Figma", icon: <Figma size={16} /> },
+    { name: "Visual Studio Code", icon: <Code2 size={16} /> },
+    { name: "Lucide Chart", icon: <Palette size={16} /> },
   ];
 
   const languages = [
-    "Python",
-    "JavaScript",
-    "Java",
-    "HTML",
-    "CSS",
-    "Tailwind CSS",
-    "ReactJS",
+    { name: "Python", icon: <TerminalSquare size={16} /> },
+    { name: "JavaScript", icon: <FileCode2 size={16} /> },
+    { name: "Java", icon: <Code2 size={16} /> },
+    { name: "HTML", icon: <Globe size={16} /> },
+    { name: "CSS", icon: <Palette size={16} /> },
+    { name: "Tailwind CSS", icon: <Palette size={16} /> },
+    { name: "ReactJS", icon: <FileCode2 size={16} /> },
   ];
 
   return (
@@ -97,7 +107,7 @@ export default function About() {
       </motion.p>
 
       
-      <motion.div
+       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1 }}
@@ -112,17 +122,18 @@ export default function About() {
             <motion.span
               key={i}
               whileHover={{ scale: 1.05 }}
-              className="px-4 py-2 rounded-full text-sm bg-green-600 dark:bg-green-700 
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm bg-green-600 dark:bg-green-700 
                          text-neutral-200 border border-stone-300/50 
                          dark:border-neutral-600 shadow-sm"
             >
-              {skill}
+              {skill.icon}
+              {skill.name}
             </motion.span>
           ))}
         </div>
       </motion.div>
 
-      
+   
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -137,11 +148,12 @@ export default function About() {
             <motion.span
               key={i}
               whileHover={{ scale: 1.05 }}
-              className="px-4 py-2 rounded-full text-sm bg-green-600 dark:bg-green-700 
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm bg-green-600 dark:bg-green-700 
                          text-neutral-200 border border-stone-300/50 
                          dark:border-neutral-600 shadow-sm"
             >
-              {lang}
+              {lang.icon}
+              {lang.name}
             </motion.span>
           ))}
         </div>

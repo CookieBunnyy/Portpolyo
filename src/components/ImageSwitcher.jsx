@@ -16,7 +16,7 @@ export default function ImageSwitcher() {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
       setDirection((prev) => !prev);
-    }, 10000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [paused]);
 

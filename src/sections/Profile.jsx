@@ -28,12 +28,8 @@ export default function Profile() {
   const [liked, setLiked] = useState(false);
   const [projects, setProjects] = useState(0);
   const [downloads, setDownloads] = useState(0);
-  
-
- 
   const downloadValue = useMotionValue(0);
   const roundedDownloads = useTransform(downloadValue, (latest) => Math.round(latest));
-
   const visitorId = getVisitorId();
 
  
