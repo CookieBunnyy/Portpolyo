@@ -42,7 +42,7 @@ export default function Opening({ onProceed }) {
 
       
       <motion.div
-        className="w-[350px] sm:w-[450px] lg:w-[600px] h-[350px] sm:h-[480px] lg:h-[800px] 
+        className="w-[350px] sm:w-[450px] lg:w-[650px] h-[350px] sm:h-[480px] lg:h-[800px] 
                    flex justify-start items-center -ml-15 lg:-ml-20 z-15"
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
